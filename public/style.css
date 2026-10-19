@@ -276,3 +276,17 @@ body.space #authView .tab.active { border-color: var(--purple); }
 .tile .mic .slash { display: none; }
 .tile .mic.muted { color: #ff6f8e; background: rgba(60, 10, 25, .75); border-color: rgba(255, 111, 142, .5); }
 .tile .mic.muted .slash { display: inline; }
+
+/* Eye button on the password box */
+.pw-wrap { position: relative; display: block; }
+.pw-wrap input { padding-right: 44px; }
+.pw-toggle {
+  position: absolute; right: 4px; top: 50%; transform: translateY(-50%); margin-top: 2px;
+  width: 36px; height: 36px; padding: 0; display: flex; align-items: center; justify-content: center;
+  background: none; border: none; color: #778; cursor: pointer;
+}
+body.space #authView .pw-toggle { background: none; color: #778; }
+.pw-toggle .eye-slash { display: none; }
+.pw-toggle.on { color: #7b5cff; }
+body.space #authView .pw-toggle.on { color: #7b5cff; }
+.pw-toggle.on .eye-slash { display: inline; }
