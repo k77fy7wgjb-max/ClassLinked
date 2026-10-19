@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: classlinked
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: ALLOWED_EMAIL_DOMAIN
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
