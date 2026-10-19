@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Classlinked</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="galaxy" aria-hidden="true"></canvas>
+
+  <header>
+    <h1 id="homeLink" title="Home">Classlinked</h1>
+    <div id="whoami" hidden>
+      <span class="mynumber">Your number <strong id="myNumber"></strong></span>
+      <span id="myName"></span>
+      <button id="logoutBtn" class="link">Log out</button>
+    </div>
+  </header>
+
+  <!-- Home page -->
+  <main id="homeView" hidden>
+    <div class="home-corner">
+      <span class="mynumber">Your number <strong id="homeNumber"></strong></span>
+      <button id="homeLogoutBtn" class="link">Log out</button>
+    </div>
+    <h1 class="home-title">Classlinked</h1>
+    <div class="home-row">
+      <button id="homeChatBtn" class="orb">Chat</button>
+      <div class="cam-frame">
+        <video id="homeCam" autoplay playsinline muted></video>
+        <button id="camStartBtn" class="cam-start">Turn on camera</button>
+      </div>
+      <button id="homeCallBtn" class="orb">Call</button>
+    </div>
+  </main>
+
+  <!-- Log in / sign up -->
+  <main id="authView" class="narrow" hidden>
+    <h1 class="home-title">Classlinked</h1>
+    <div class="card">
+      <div class="tabs">
+        <button id="loginTab" class="tab active">Log in</button>
+        <button id="signupTab" class="tab">Sign up</button>
+      </div>
+      <form id="authForm">
+        <label id="nameRow" hidden>Name
+          <input id="name" autocomplete="name" maxlength="40">
+        </label>
+        <label>School email
+          <input id="email" type="email" autocomplete="email" required>
+        </label>
+        <label>Password
+          <input id="password" type="password" autocomplete="current-password" minlength="8" required>
+        </label>
+        <p id="authError" class="error" hidden></p>
+        <button id="authSubmit" type="submit" class="primary wide">Log in</button>
+      </form>
+      <p class="hint">Only <strong id="domainHint"></strong> emails can join. You get your own Classlinked number when you sign up.</p>
+    </div>
+  </main>
+
+  <!-- Chats -->
+  <main id="appView" hidden>
+    <aside id="sidebar">
+      <div class="row">
+        <button id="newChatBtn" class="primary">New chat</button>
+        <button id="newClassBtn">New class</button>
+      </div>
+      <ul id="chatList"></ul>
+      <p id="noChats" class="hint">No chats yet. Ask a classmate for their Classlinked number and press New chat.</p>
+    </aside>
+
+    <section id="chatPane">
+      <div id="noChatOpen" class="hint center">Pick a chat, or start a new one.</div>
+      <div id="chatOpen" hidden>
+        <div class="chat-head">
+          <button id="backBtn" class="link back">&larr;</button>
+          <div class="grow">
+            <div id="chatName" class="chat-name"></div>
+            <div id="chatSub" class="hint small"></div>
+          </div>
+          <button id="addBtn" class="primary">Add</button>
+        </div>
+        <div id="callBanner" class="banner" hidden>
+          <span id="callBannerText" class="grow"></span>
+          <button id="joinCallBtn" class="primary">Join</button>
+        </div>
+        <div id="classMenu" class="banner" hidden>
+          <span id="memberList" class="grow small"></span>
+          <button id="leaveClassBtn" class="danger">Leave class</button>
+        </div>
+        <ol id="messages"></ol>
+        <form id="composer">
+          <input id="msgInput" placeholder="Type a message" maxlength="1000" autocomplete="off">
+          <button class="primary">Send</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Add, step 1: their number -->
+  <dialog id="addNumberDialog">
+    <form id="addNumberForm">
+      <h3>Add someone</h3>
+      <p id="addNumberHint" class="hint"></p>
+      <label>Their Classlinked number
+        <input id="addNumber" placeholder="123-4567" inputmode="numeric" autocomplete="off" required>
+      </label>
+      <p class="error" hidden></p>
+      <div class="row end">
+        <button type="button" class="cancel">Cancel</button>
+        <button class="primary">Next</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Add, step 2: their info -->
+  <dialog id="addInfoDialog">
+    <form id="addInfoForm">
+      <h3>Contact info</h3>
+      <p class="hint">Number <strong id="addInfoNumber"></strong></p>
+      <label>Name
+        <input id="addName" placeholder="Their name" maxlength="40" autocomplete="off" required>
+      </label>
+      <p class="error" hidden></p>
+      <div class="row end">
+        <button type="button" class="back-step">Back</button>
+        <button class="primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- New class -->
+  <dialog id="newClassDialog">
+    <form id="newClassForm">
+      <h3>New class</h3>
+      <label>Class name
+        <input id="newClassName" placeholder="Period 3 Biology" maxlength="40" required>
+      </label>
+      <label>Classlinked numbers (one per line, or separated by commas)
+        <textarea id="newClassNumbers" rows="5" placeholder="123-4567&#10;234-5678" required></textarea>
+      </label>
+      <p class="error" hidden></p>
+      <div class="row end">
+        <button type="button" class="cancel">Cancel</button>
+        <button class="primary">Make class</button>
+      </div>
+    </form>
+  </dialog>
+
+
+  <!-- Pick who to call (from the home page) -->
+  <dialog id="callPickDialog">
+    <h3>Who do you want to call?</h3>
+    <ul id="callPickList"></ul>
+    <p id="callPickEmpty" class="hint" hidden>No chats yet. Press Chat and add someone's number first.</p>
+    <div class="row end">
+      <button type="button" class="cancel">Close</button>
+    </div>
+  </dialog>
+
+  <!-- Incoming call -->
+  <div id="ringBox" class="overlay" hidden>
+    <div class="card center">
+      <p id="ringText"></p>
+      <div class="row">
+        <button id="acceptBtn" class="primary">Answer</button>
+        <button id="declineBtn" class="danger">Decline</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- In a call -->
+  <div id="callView" class="overlay dark" hidden>
+    <p id="callStatus"></p>
+    <div id="tiles"></div>
+    <div class="controls">
+      <button id="camBtn">Camera off</button>
+      <button id="hangupBtn" class="danger">Leave call</button>
+    </div>
+    <div id="callChat">
+      <ol id="callMessages"></ol>
+      <form id="callComposer">
+        <input id="callMsgInput" placeholder="Message everyone in the call" maxlength="1000" autocomplete="off">
+        <button class="primary">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <p id="toast" hidden></p>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
